@@ -1,5 +1,6 @@
 import { Game } from "./game.js";
 
+
 let game = undefined;
 let clickTarget = document.getElementById("click-targets");
 
@@ -48,8 +49,12 @@ window.addEventListener("DOMContentLoaded", () => {
 
     updateUI();
   });
+
   clickTarget.addEventListener("click", (event) => {
-    game.playInColumn();
+    let targetId = event.target.id;
+    let columnIndex = Number.parseInt(targetId[targetId.length-1]);
+    console.log(columnIndex);
+    game.playInColumn(columnIndex);
     updateUI();
   });
 });
