@@ -5,13 +5,15 @@ export class Game {
     this.player1name = player1name;
     this.player2name = player2name;
     this.currentPlayer = 1;
-    this.columns = [new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column()];
+    this.columns = [
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+    ];
   }
 
   getName() {
@@ -19,7 +21,11 @@ export class Game {
   }
 
   getTokenAt(rowIndex, columnIndex) {
-      return this.columns[columnIndex].getTokenAt(rowIndex);
+    return this.columns[columnIndex].getTokenAt(rowIndex);
+  }
+
+  isColumnFull(columnIndex) {
+    return this.columns[columnIndex].isFull();
   }
 
   playInColumn(columnIndex) {

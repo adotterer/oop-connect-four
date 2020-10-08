@@ -1,6 +1,5 @@
 import { Game } from "./game.js";
 
-
 let game = undefined;
 let clickTarget = document.getElementById("click-targets");
 
@@ -13,12 +12,41 @@ function updateUI() {
     document.getElementById("game-name").innerHTML = game.getName();
   }
   let currentPlayer = game.currentPlayer;
+
   if (currentPlayer === 1) {
-    clickTarget.classList.remove("black");
-    clickTarget.classList.add("red");
-  } else {
     clickTarget.classList.remove("red");
     clickTarget.classList.add("black");
+  } else {
+    clickTarget.classList.remove("black");
+    clickTarget.classList.add("red");
+  }
+
+  for (let rowIndex = 0; rowIndex <= 5; rowIndex++) {
+    for (let columnIndex = 0; columnIndex <= 6; columnIndex++) {
+      let space = document.querySelector(`#square-${rowIndex}-${columnIndex}`);
+      space.innerHTML = "";
+      let player = game.getTokenAt(rowIndex, columnIndex);
+      if (player === 1) {
+        let token = document.createElement("div");
+        token.classList.add("token");
+        token.classList.add("black");
+        space.appendChild(token);
+      } else if (player === 2) {
+        let token = document.createElement("div");
+        token.classList.add("token");
+        token.classList.add("red");
+        space.appendChild(token);
+      }
+    }
+  }
+  for (let i = 0; i <= 6; i++) {
+    let isColumnFull = game.isColumnFull(i);
+    let column = document.getElementById(`column-${i}`);
+    if (isColumnFull) {
+      column.classList.add("full");
+    } else {
+      column.classList.remove("full");
+    }
   }
 }
 
@@ -52,7 +80,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   clickTarget.addEventListener("click", (event) => {
     let targetId = event.target.id;
-    let columnIndex = Number.parseInt(targetId[targetId.length-1]);
+    let columnIndex = Number.parseInt(targetId[targetId.length - 1]);
     console.log(columnIndex);
     game.playInColumn(columnIndex);
     updateUI();
