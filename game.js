@@ -1,5 +1,7 @@
 import { Column } from "./column.js";
 import { ColumnWinInspector } from "./columnWinInspector.js";
+import { RowWinInspector } from "./rowWinInspector.js";
+import { DiagonalWinInspector } from "./diagonalWinInspector.js";
 
 export class Game {
   constructor(player1name, player2name) {
@@ -50,6 +52,8 @@ export class Game {
     }
     this.checkForTie();
     this.checkForColumnWin();
+    this.checkForRowWin();
+    this.checkForDiagonalWin();
   }
 
   checkForTie() {
@@ -71,6 +75,36 @@ export class Game {
                 }
         }
     }
+  }
+
+  checkForRowWin() {
+      if (this.winnerNumber !== 0) {
+          return;
+      } else {
+          for (let i = 0; i <= 3; i++) {
+              let columns = this.columns.slice(i, i+4);
+              let winInspector = new RowWinInspector(columns);
+              if (winInspector.inspect() === 1 ||
+                  winInspector.inspect() === 2) {
+                  this.winnerNumber = winInspector.inspect();
+              }
+          }
+      }
+  }
+
+  checkForDiagonalWin() {
+      if (this.winnerNumber !== 0) {
+          return;
+      } else {
+          for (let i = 0; i <= 3; i++) {
+              let columns = this.columns.slice(i, i + 4);
+              let winInspector = new DiagonalWinInspector(columns);
+              if (winInspector.inspect() === 1 ||
+                  winInspector.inspect() === 2) {
+                  this.winnerNumber = winInspector.inspect();
+              }
+          }
+      }
   }
 
 
