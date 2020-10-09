@@ -1,16 +1,19 @@
 import { Game } from "./game.js";
+import { GameJsonSerializer } from "./gameJsonSerializer.js";
+import { GameJsonDeserializer } from "./gameJsonDeserializer.js";
 
 let game = undefined;
 let clickTarget = document.getElementById("click-targets");
+let boardHolder = document.getElementById("board-holder");
 
 function updateUI() {
-  let boardHolder = document.getElementById("board-holder");
   if (game === undefined) {
     boardHolder.classList.add("is-invisible");
   } else {
     boardHolder.classList.remove("is-invisible");
     document.getElementById("game-name").innerHTML = game.getName();
   }
+
   let currentPlayer = game.currentPlayer;
 
   if (currentPlayer === 1) {
@@ -54,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let player1 = document.getElementById("player-1-name");
   let player2 = document.getElementById("player-2-name");
   let newGameButton = document.getElementById("new-game");
-  let saveGameButton = document.getElementById("save-game");
+  // let saveGameButton = document.getElementById("save-game");
 
   player1.addEventListener("keyup", (event) => {
     enableNewGameButton();
@@ -71,24 +74,41 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   newGameButton.addEventListener("click", (event) => {
+    if (window.localStorage["savedGame"]) {
+      window.localStorage.removeItem("savedGame");
+      player1.disabled = false;
+      player2.disabled = false;
+      enableNewGameButton();
+      updateUI();
+      return;
+    }
+
     game = new Game(player1.value, player2.value);
     player1.value = "";
     player2.value = "";
     enableNewGameButton();
-    // enableSaveGameButton();
     updateUI();
   });
 
-  function enableSaveGameButton() {
-    console.log("enableSaveGameButton", game.columns);
-    saveGameButton.disabled = game.columns.length !== 7;
-  }
-
   clickTarget.addEventListener("click", (event) => {
     let targetId = event.target.id;
+    if (!targetId.startsWith("column-")) return;
+
     let columnIndex = Number.parseInt(targetId[targetId.length - 1]);
     game.playInColumn(columnIndex);
+    if (game.winnerNumber === 0) {
+      const serializer = new GameJsonSerializer(game);
+      const json = serializer.serialize();
+      window.localStorage.setItem("savedGame", json);
+    } else {
+      newGameButton.disabled = false;
+      updateUI();
+      game = undefined;
+      player1.disabled = true;
+      player2.disabled = true;
+      console.log("THERE IS A WINNER");
+      return;
+    }
     updateUI();
-    enableSaveGameButton();
   });
 });
