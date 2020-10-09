@@ -1,4 +1,5 @@
 import { Column } from "./column.js";
+import { GameJsonSerializer } from "./gameJsonSerializer.js";
 
 export class Game {
   constructor(player1name, player2name) {
@@ -37,4 +38,10 @@ export class Game {
       this.currentPlayer = 1;
     }
   }
+
+  saveGame(game) {
+    let savedGame = new GameJsonSerializer(game);
+  }
+
+  unsaveGame() {}
 }

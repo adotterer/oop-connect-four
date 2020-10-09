@@ -54,6 +54,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let player1 = document.getElementById("player-1-name");
   let player2 = document.getElementById("player-2-name");
   let newGameButton = document.getElementById("new-game");
+  let saveGameButton = document.getElementById("save-game");
 
   player1.addEventListener("keyup", (event) => {
     enableNewGameButton();
@@ -74,15 +75,20 @@ window.addEventListener("DOMContentLoaded", () => {
     player1.value = "";
     player2.value = "";
     enableNewGameButton();
-
+    // enableSaveGameButton();
     updateUI();
   });
+
+  function enableSaveGameButton() {
+    console.log("enableSaveGameButton", game.columns);
+    saveGameButton.disabled = game.columns.length !== 7;
+  }
 
   clickTarget.addEventListener("click", (event) => {
     let targetId = event.target.id;
     let columnIndex = Number.parseInt(targetId[targetId.length - 1]);
-    console.log(columnIndex);
     game.playInColumn(columnIndex);
     updateUI();
+    enableSaveGameButton();
   });
 });
