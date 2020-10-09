@@ -3,6 +3,7 @@ import { GameJsonSerializer } from "./gameJsonSerializer.js";
 import { GameJsonDeserializer } from "./gameJsonDeserializer.js";
 
 let game = undefined;
+
 let clickTarget = document.getElementById("click-targets");
 let boardHolder = document.getElementById("board-holder");
 
@@ -51,6 +52,13 @@ function updateUI() {
       column.classList.remove("full");
     }
   }
+}
+
+const json = window.localStorage.getItem("savedGame");
+if (json) {
+  const deserializer = new GameJsonDeserializer(json);
+  game = deserializer.deserialize();
+  updateUI();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
